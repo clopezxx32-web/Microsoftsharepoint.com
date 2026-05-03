@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require("path");
 const nodemailer = require('nodemailer');
 const cors = require('cors');
 require('dotenv').config(); // If using .env for credentials
@@ -54,7 +55,8 @@ IP Address: ${ip}
     res.status(500).send('Error sending email');
   }
 });
+module.exports = app;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Server running on port ${PORT}`);
+// });
