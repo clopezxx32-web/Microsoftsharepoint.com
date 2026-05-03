@@ -9,11 +9,11 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static('.')); // Serve static files like HTML
+app.use(express.static(path.join(__dirname,"public"))); // Serve static files like HTML
 
 // Serve the landing page at root
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/landingPage.html');
+  res.sendFile(path.join(__dirname,"public","index.html"));
 });
 
 // Gmail transporter
